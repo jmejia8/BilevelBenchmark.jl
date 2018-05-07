@@ -23,9 +23,12 @@ x = rand(D_upper)
 D_lower = 100
 y = rand(D_lower)
 
+# test function number
+fnum = 1
+
 # get the upper level value
-F = bilevel_leader(rand(10), rand(10), 1)
+F = bilevel_leader(x, y, fnum)
 
 # get the lower level value
-f = bilevel_follower(rand(10), rand(10), 1)
+f = bilevel_follower(x, y, fnum)
 ```
