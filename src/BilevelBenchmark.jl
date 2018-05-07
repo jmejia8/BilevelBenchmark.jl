@@ -1,5 +1,9 @@
 module BilevelBenchmark
 
+if Pkg.installed("BinDeps") == nothing
+    Pkg.add("BinDeps")
+end
+
 if isfile(joinpath(dirname(@__FILE__),"..","deps","deps.jl"))
     include("../deps/deps.jl")
 else
