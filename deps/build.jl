@@ -1,3 +1,7 @@
+if Pkg.installed("BinDeps") == nothing
+    Pkg.add("BinDeps")
+end
+
 using BinDeps
 using Compat.Libdl
 
