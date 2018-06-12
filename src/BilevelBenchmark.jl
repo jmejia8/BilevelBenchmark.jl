@@ -12,7 +12,7 @@ end
 
 export bilevel_leader, bilevel_follower
 
-function bilevel_leader(x::Vector, y::Vector, fnum::Int)
+function bilevel_leader(x::Array{Float64}, y::Array{Float64}, fnum::Int)
 	D_upper = length(x)
 	D_lower = length(y)
 	F = [0.0]
@@ -25,7 +25,7 @@ function bilevel_leader(x::Vector, y::Vector, fnum::Int)
 	return F[1]
 end
 
-function bilevel_follower(x::Vector, y::Vector, fnum::Int)
+function bilevel_follower(x::Array{Float64}, y::Array{Float64}, fnum::Int)
 	D_upper = length(x)
 	D_lower = length(y)
 	F = [0.0]
