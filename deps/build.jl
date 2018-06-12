@@ -8,18 +8,18 @@ using Compat.Libdl
 @BinDeps.setup
 
 bilevelBenchmark = library_dependency("bilevelBenchmarkJulia", aliases=["blb18_op"], os = :Unix)
-version = "v0.5"
+version = "0.5"
 
 # build from source
 provides(Sources,
-        URI("https://github.com/jmejia8/bilevel-benchmark/archive/$(version).zip"),
-        unpacked_dir="bilevel-benchmark-master",
+        URI("https://github.com/jmejia8/bilevel-benchmark/archive/v$(version).zip"),
+        unpacked_dir="bilevel-benchmark-$version",
         bilevelBenchmark)
 
 # provides(BuildProcess, Autotools(libtarget = "libgsl.la"), bilevelBenchmark)
 
 prefix = joinpath(BinDeps.depsdir(bilevelBenchmark), "usr")
-srcdir = joinpath(BinDeps.srcdir(bilevelBenchmark), "bilevel-benchmark-master")
+srcdir = joinpath(BinDeps.srcdir(bilevelBenchmark), "bilevel-benchmark-$version")
 
 println(prefix)
 
