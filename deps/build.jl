@@ -8,7 +8,7 @@ using Compat.Libdl
 @BinDeps.setup
 
 bilevelBenchmark = library_dependency("bilevelBenchmarkJulia", aliases=["blb18_op"], os = :Unix)
-version = "0.5"
+version = "0.6"
 
 # build from source
 provides(Sources,
