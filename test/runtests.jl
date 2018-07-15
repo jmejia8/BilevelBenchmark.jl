@@ -1,7 +1,6 @@
 using BilevelBenchmark
 using Base.Test
 
-# write your own tests here
 
 @testset "bilevel" begin
     for i = 1:8
@@ -9,10 +8,10 @@ using Base.Test
     end
 end
 
-@testset "SDM" begin
+@testset "SMD" begin
     p, q, r, s = 3, 3, 2, 0
     for i = 1:8
-        @test SDM_leader(ones(1000), ones(1000), i, p, q, r, s) ≈ SDM_leader(ones(1000), ones(1000), i, p, q, r, s)
-        @test SDM_follower(ones(1000), ones(1000), i, p, q, r, s) ≈ SDM_follower(ones(1000), ones(1000), i, p, q, r, s)
+        @test SMD_leader(ones(1000), ones(1000), i, p, q, r, s) ≈ SMD_leader(ones(1000), ones(1000), i, p, q, r, s)
+        @test SMD_follower(ones(1000), ones(1000), i, p, q, r, s) ≈ SMD_follower(ones(1000), ones(1000), i, p, q, r, s)
     end
 end
