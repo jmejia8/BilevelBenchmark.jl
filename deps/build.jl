@@ -7,8 +7,8 @@ using Compat.Libdl
 
 @BinDeps.setup
 
-bilevelBenchmark = library_dependency("bilevelBenchmarkJulia", aliases=["blb18_op"], os = :Unix)
-version = "0.5"
+version = "0.7"
+bilevelBenchmark = library_dependency("bilevelBenchmarkJulia", aliases=["blb18_op_v$version"], os = :Unix)
 
 # build from source
 provides(Sources,
@@ -30,7 +30,7 @@ provides(SimpleBuild,
         @build_steps begin
             ChangeDirectory(srcdir)
             MAKE_CMD
-            `mv blb18_op.$(Libdl.dlext) "$prefix/lib"`
+            `mv blb18_op.$(Libdl.dlext) "$prefix/lib/blb18_op_v$(version).$(Libdl.dlext)"`
         end
     end), [bilevelBenchmark], os = :Unix)
 
