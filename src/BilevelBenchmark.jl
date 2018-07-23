@@ -39,7 +39,13 @@ function bilevel_follower(x::Array{Float64}, y::Array{Float64}, fnum::Int)
 end
 
 
-function SMD_leader(x::Array{Float64}, y::Array{Float64}, fnum::Int, p, q, r, s = 0)
+function SMD_leader(x::Array{Float64},
+					  y::Array{Float64},
+				   fnum::Int,
+				      p::Int,
+				      q::Int,
+				      r::Int,
+				      s::Int = 0)
 	F = [0.0]
 
 	if fnum == 1
@@ -90,7 +96,13 @@ function SMD_leader(x::Array{Float64}, y::Array{Float64}, fnum::Int, p, q, r, s 
 end
 
 
-function SMD_follower(x::Array{Float64}, y::Array{Float64}, fnum::Int, p, q, r, s = 0)
+function SMD_follower(x::Array{Float64},
+					  y::Array{Float64},
+				   fnum::Int,
+				      p::Int,
+				      q::Int,
+				      r::Int,
+				      s::Int = 0)
 	D_upper = length(x)
 	D_lower = length(y)
 	F = [0.0]
