@@ -90,7 +90,7 @@ function bilevel_leader(x::Array{Float64}, y::Array{Float64}, fnum::Int)
     	return F[1]
     end
 
-    return F[1], G
+    return F[1], -G
 
 
     
@@ -117,7 +117,7 @@ function bilevel_follower(x::Array{Float64}, y::Array{Float64}, fnum::Int)
         return f[1]
     end
 
-    return f[1], g
+    return f[1], -g
 end
 
 
