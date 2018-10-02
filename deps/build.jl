@@ -1,5 +1,10 @@
-if Pkg.installed("BinDeps") == nothing
-    Pkg.add("BinDeps")
+if VERSION >= v"0.7.0"
+    using Pkg
+    "BinDeps" ∉ keys(Pkg.installed()) && Pkg.add("BinDeps")
+    "Compat" ∉ keys(Pkg.installed()) && Pkg.add("Compat")
+
+elseif VERSION < v"0.7.0" && Pkg.installed("BinDeps") == nothing
+    Pkg.add("BinDeps")    
 end
 
 using BinDeps
