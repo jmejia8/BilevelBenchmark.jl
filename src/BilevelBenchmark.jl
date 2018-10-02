@@ -1,7 +1,12 @@
 module BilevelBenchmark
 
-if Pkg.installed("BinDeps") == nothing
-    Pkg.add("BinDeps")
+if VERSION >= v"0.7.0"
+    using Pkg
+    "BinDeps" ∉ keys(Pkg.installed()) && Pkg.add("BinDeps")
+
+elseif VERSION < v"0.7.0"
+    Pkg.installed("BinDeps") == nothing && Pkg.add("BinDeps")
+    Cvoid = Void
 end
 
 if isfile(joinpath(dirname(@__FILE__),"..","deps","deps.jl"))
@@ -50,7 +55,7 @@ function bilevel_solutions(D_ul::Int, D_ll::Int, fnum::Int)
     y = zeros(D_ll)
 
     ccall((:blb18_cop_solutions, bilevelBenchmark),
-              Void,
+              Cvoid,
             (Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Int32),
             D_ul, D_ll, x, y, fnum)
     
@@ -62,7 +67,7 @@ function bilevel_ranges(D_ul::Int, D_ll::Int, fnum::Int)
     bounds_ll = zeros(2D_ll)
 
     ccall((:blb18_cop_ranges, bilevelBenchmark),
-              Void,
+              Cvoid,
             (Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Int32),
             D_ul, D_ll, bounds_ul, bounds_ll, fnum)
     
@@ -82,7 +87,7 @@ function bilevel_leader(x::Array{Float64}, y::Array{Float64}, fnum::Int)
     end
 
     ccall((:blb18_leader_cop, bilevelBenchmark),
-          Void,
+          Cvoid,
         (Int32, Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Int32),
         1, D_ul, D_ll, x, y, F, G, fnum)
 
@@ -109,7 +114,7 @@ function bilevel_follower(x::Array{Float64}, y::Array{Float64}, fnum::Int)
     end
 
 	ccall((:blb18_follower_cop, bilevelBenchmark),
-		  Void,
+		  Cvoid,
 		(Int32, Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Int32),
 		1, D_ul, D_ll, x, y, f, g, fnum)
 	
@@ -126,42 +131,42 @@ function SMD_leader(x::Array{Float64}, y::Array{Float64}, fnum::Int,p::Int,q::In
 
 	if fnum == 1
 		ccall((:SMD1_leader, bilevelBenchmark),
-		  Void,
+		  Cvoid,
 		(Int32, Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}),
 		  p, q, r, x, y, F)
 	elseif fnum == 2
 		ccall((:SMD2_leader, bilevelBenchmark),
-		  Void,
+		  Cvoid,
 		(Int32, Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}),
 		  p, q, r, x, y, F)
 	elseif fnum == 3
 		ccall((:SMD3_leader, bilevelBenchmark),
-		  Void,
+		  Cvoid,
 		(Int32, Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}),
 		  p, q, r, x, y, F)
 	elseif fnum == 4
 		ccall((:SMD4_leader, bilevelBenchmark),
-		  Void,
+		  Cvoid,
 		(Int32, Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}),
 		  p, q, r, x, y, F)
 	elseif fnum == 5
 		ccall((:SMD5_leader, bilevelBenchmark),
-		  Void,
+		  Cvoid,
 		(Int32, Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}),
 		  p, q, r, x, y, F)
 	elseif fnum == 6
 		ccall((:SMD6_leader, bilevelBenchmark),
-		  Void,
+		  Cvoid,
 		(Int32, Int32, Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}),
 		  p, q, r, s, x, y, F)
 	elseif fnum == 7
 		ccall((:SMD7_leader, bilevelBenchmark),
-		  Void,
+		  Cvoid,
 		(Int32, Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}),
 		  p, q, r, x, y, F)
 	elseif fnum == 8
 		ccall((:SMD8_leader, bilevelBenchmark),
-		  Void,
+		  Cvoid,
 		(Int32, Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}),
 		  p, q, r, x, y, F)
 	else
@@ -179,42 +184,42 @@ function SMD_follower(x::Array{Float64},y::Array{Float64},fnum::Int,p::Int,q::In
 
 	if fnum == 1
 		ccall((:SMD1_follower, bilevelBenchmark),
-		  Void,
+		  Cvoid,
 		(Int32, Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}),
 		  p, q, r, x, y, F)
 	elseif fnum == 2
 		ccall((:SMD2_follower, bilevelBenchmark),
-		  Void,
+		  Cvoid,
 		(Int32, Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}),
 		  p, q, r, x, y, F)
 	elseif fnum == 3
 		ccall((:SMD3_follower, bilevelBenchmark),
-		  Void,
+		  Cvoid,
 		(Int32, Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}),
 		  p, q, r, x, y, F)
 	elseif fnum == 4
 		ccall((:SMD4_follower, bilevelBenchmark),
-		  Void,
+		  Cvoid,
 		(Int32, Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}),
 		  p, q, r, x, y, F)
 	elseif fnum == 5
 		ccall((:SMD5_follower, bilevelBenchmark),
-		  Void,
+		  Cvoid,
 		(Int32, Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}),
 		  p, q, r, x, y, F)
 	elseif fnum == 6
 		ccall((:SMD6_follower, bilevelBenchmark),
-		  Void,
+		  Cvoid,
 		(Int32, Int32, Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}),
 		  p, q, r, s, x, y, F)
 	elseif fnum == 7
 		ccall((:SMD7_follower, bilevelBenchmark),
-		  Void,
+		  Cvoid,
 		(Int32, Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}),
 		  p, q, r, x, y, F)
 	elseif fnum == 8
 		ccall((:SMD8_follower, bilevelBenchmark),
-		  Void,
+		  Cvoid,
 		(Int32, Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}),
 		  p, q, r, x, y, F)
 	else
