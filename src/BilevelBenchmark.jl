@@ -71,7 +71,7 @@ function bilevel_ranges(D_ul::Int, D_ll::Int, fnum::Int)
             (Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Int32),
             D_ul, D_ll, bounds_ul, bounds_ll, fnum)
     
-    return reshape(bounds_ul, D_ul, :)', reshape(bounds_ll, D_ll, :)'
+    return Array(reshape(bounds_ul, D_ul, :)'), Array(reshape(bounds_ll, D_ll, :)')
 end
 
 function bilevel_leader(x::Array{Float64}, y::Array{Float64}, fnum::Int)
