@@ -1,14 +1,21 @@
+
+function bilevel_settings(D_ul::Int, D_ll::Int, fnum::Int)
+
+    settings = zeros(Int32, 4)
+    ccall((:TP_leader, bilevelBenchmark),
+          Cvoid,
+        (Ptr{Int32}, Int32),
+        settings, fnum)
+
+    D_ul, D_ll, lenG, leng = settings
+
+    return D_ul, D_ll, lenG, leng
+end
+
 function TP_leader(x::Array{Float64}, y::Array{Float64}, fnum::Int)
-    D_ul = length(x)
-    D_ll = length(y)
+    D_ul, D_ll, lenG, leng = bilevel_settings(D_ul, D_ll, fnum)
     F = [0.0]
     G = [0.0]
-    lenG = 0
-
-    if fnum > 8
-        lenG, _ = bilevel_settings(D_ul, D_ll, fnum)
-        G = zeros(lenG)
-    end
 
     ccall((:TP_leader, bilevelBenchmark),
           Cvoid,
