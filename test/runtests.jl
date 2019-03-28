@@ -1,5 +1,5 @@
 using BilevelBenchmark
-using Base.Test
+using Test
 
 @testset "Bilevel unconstrained" begin
     D_ul = 5
@@ -33,9 +33,16 @@ end
     end
 end
 
+@testset "TP" begin
+    for i = 1:10
+        @test TP_test(i) >= 0
+    end
+end
+
+
 @testset "bilevel constrained" begin
-    D_ul = 50
-    D_ll = 50
+    D_ul = 5
+    D_ll = 5
 
     for i = 9:12
         lenG, leng = bilevel_settings(D_ul, D_ll, i)
@@ -47,9 +54,10 @@ end
         F, G = bilevel_leader(x, y, i)
         f, g = bilevel_follower(x, y, i)
 
+
         @test length(G) == lenG
         @test length(g) == leng
-        @test F + sum(G) > -Inf
-        @test f + sum(g) > -Inf
+        @test abs(F + sum(G)) >= 0
+        @test abs(f + sum(g)) >= 0
     end
 end
