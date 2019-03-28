@@ -17,6 +17,9 @@ end
 
 export bilevel_leader, bilevel_follower, SMD_leader, SMD_follower, bilevel_solutions
 export bilevel_settings, bilevel_ranges
+export TP_settings,TP_leader,TP_follower,TP_test
+
+include("TP.jl")
 
 function bilevel_settings(D_ul::Int, D_ll::Int, fnum::Int)
     r = div(D_ul, 2);
