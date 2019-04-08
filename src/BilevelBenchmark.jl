@@ -18,6 +18,7 @@ end
 export bilevel_leader, bilevel_follower, SMD_leader, SMD_follower, bilevel_solutions
 export bilevel_settings, bilevel_ranges
 export TP_settings,TP_leader,TP_follower,TP_test
+export PMM_settings, PMM_Ψ, PMM_leader, PMM_follower, PMM_test
 
 include("TP.jl")
 
