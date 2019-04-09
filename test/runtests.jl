@@ -39,6 +39,12 @@ end
     end
 end
 
+@testset "PMM" begin
+    for i = 1:10
+        @test BilevelBenchmark.PMM_test(5, 10, i) >= 0
+    end
+end
+
 
 @testset "bilevel constrained" begin
     D_ul = 5

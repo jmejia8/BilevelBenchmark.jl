@@ -11,6 +11,17 @@ function PMM_settings(fnum::Int)
     return lenG, leng
 end
 
+function PMM_test(m::Int, n::Int, fnum::Int)
+
+    a = ccall((:PMM_test, bilevelBenchmark),
+          Cdouble,
+        (Int32, Int32, Int32),
+        m, n, fnum)
+
+
+    return a
+end
+
 function PMM_Ψ(x::Array{Float64}, m::Int, fnum::Int)
 
     lenG, leng = PMM_settings(fnum)
@@ -31,10 +42,13 @@ function PMM_leader(x::Array{Float64}, y::Array{Float64}, fnum::Int)
     F = [0.0]
     G = zeros(lenG)
 
+    n = length(x)
+    m = div(n, 2)
+
     ccall((:PMM_leader, bilevelBenchmark),
           Cvoid,
         (Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Int32),
-        D_ul, D_ll, x, y, F, G, fnum)
+        m, n, x, y, F, G, fnum)
 
     if lenG == 0
         return F[1]
@@ -49,10 +63,13 @@ function PMM_follower(x::Array{Float64}, y::Array{Float64}, fnum::Int)
     f = [0.0]
     g = zeros(leng)
 
+    n = length(x)
+    m = div(n, 2)
+
     ccall((:PMM_follower, bilevelBenchmark),
           Cvoid,
         (Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Int32),
-        D_ul, D_ll, x, y, f, g, fnum)
+        m, n, x, y, f, g, fnum)
 
     if leng == 0
         return F[1]
@@ -64,8 +81,8 @@ end
 function PMM_test(fnum)
     lenG, leng = PMM_settings(fnum)
 
-    x = rand(D_ul)
-    y = rand(D_ll)
+    x = rand(10)
+    y = rand(10)
     f, gs = PMM_follower(x, y, fnum)
     F, Gs = PMM_leader(x, y, fnum)
     return abs(F + f)

@@ -21,6 +21,7 @@ export TP_settings,TP_leader,TP_follower,TP_test
 export PMM_settings, PMM_Ψ, PMM_leader, PMM_follower, PMM_test
 
 include("TP.jl")
+include("PMM.jl")
 
 function bilevel_settings(D_ul::Int, D_ll::Int, fnum::Int)
     r = div(D_ul, 2);
