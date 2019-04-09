@@ -12,12 +12,12 @@ using Compat.Libdl
 
 @BinDeps.setup
 
-version = "9.0.0"
+version = "develop"
 bilevelBenchmark = library_dependency("bilevelBenchmarkJulia", aliases=["blb18_op_v$version"], os = :Unix)
 
 # build from source
 provides(Sources,
-        URI("https://github.com/jmejia8/bilevel-benchmark/archive/v$(version).zip"),
+        URI("https://github.com/jmejia8/bilevel-benchmark/archive/develop.zip"),
         unpacked_dir="bilevel-benchmark-$version",
         bilevelBenchmark)
 

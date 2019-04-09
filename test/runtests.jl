@@ -5,8 +5,8 @@ using Test
     D_ul = 5
     D_ll = 5
     for i = 1:8
-        x, y = bilevel_solutions(D_ul, D_ll, i)
-        Fx, fy = bilevel_leader(x, y, i), bilevel_leader(x, y, i)
+        x, y = SMD_solutions(D_ul, D_ll, i)
+        Fx, fy = SMD_leader(x, y, i), SMD_leader(x, y, i)
         @test  abs(Fx) + abs(fy) < 1e-10
     end
 end
@@ -16,11 +16,11 @@ end
     D_ul = 5
     D_ll = 5
     for i = 1:8
-        bounds_ul, bounds_ll = bilevel_ranges(D_ul, D_ll, i)
+        bounds_ul, bounds_ll = SMD_ranges(D_ul, D_ll, i)
         x = bounds_ul[1,:] + (bounds_ul[2,:] - bounds_ul[1,:]) .* rand(D_ul)
         y = bounds_ll[1,:] + (bounds_ll[2,:] - bounds_ll[1,:]) .* rand(D_ul)
         
-        Fx, fy = bilevel_leader(x, y, i), bilevel_leader(x, y, i)
+        Fx, fy = SMD_leader(x, y, i), SMD_leader(x, y, i)
         @test  abs(Fx) + abs(fy) > -Inf
     end
 end
@@ -51,14 +51,14 @@ end
     D_ll = 5
 
     for i = 9:12
-        lenG, leng = bilevel_settings(D_ul, D_ll, i)
+        p,q,r,s,lenG, leng = SMD_settings(D_ul, D_ll, i)
 
-        bounds_ul, bounds_ll = bilevel_ranges(D_ul, D_ll, i)
+        bounds_ul, bounds_ll = SMD_ranges(D_ul, D_ll, i)
         x = bounds_ul[1,:] + (bounds_ul[2,:] - bounds_ul[1,:]) .* rand(D_ul)
         y = bounds_ll[1,:] + (bounds_ll[2,:] - bounds_ll[1,:]) .* rand(D_ul)
 
-        F, G = bilevel_leader(x, y, i)
-        f, g = bilevel_follower(x, y, i)
+        F, G = SMD_leader(x, y, i)
+        f, g = SMD_follower(x, y, i)
 
 
         @test length(G) == lenG

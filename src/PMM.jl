@@ -78,13 +78,3 @@ function PMM_follower(x::Array{Float64}, y::Array{Float64}, fnum::Int)
     return f[1], -g
 end
 
-function PMM_test(fnum)
-    lenG, leng = PMM_settings(fnum)
-
-    x = rand(10)
-    y = rand(10)
-    f, gs = PMM_follower(x, y, fnum)
-    F, Gs = PMM_leader(x, y, fnum)
-    return abs(F + f)
-end
-

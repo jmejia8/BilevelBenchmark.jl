@@ -15,15 +15,18 @@ else
     error("This test function suit is not properly installed. Please run Pkg.build(\"BilevelBenchmark\")")
 end
 
-export bilevel_leader, bilevel_follower, SMD_leader, SMD_follower, bilevel_solutions
+export bilevel_leader, bilevel_follower, bilevel_solutions
 export bilevel_settings, bilevel_ranges
 export TP_settings,TP_leader,TP_follower,TP_test
+export SMD_settings, SMD_solutions, SMD_ranges, SMD_leader, SMD_follower
 export PMM_settings, PMM_Ψ, PMM_leader, PMM_follower, PMM_test
 
 include("TP.jl")
+include("SMD.jl")
 include("PMM.jl")
 
 function bilevel_settings(D_ul::Int, D_ll::Int, fnum::Int)
+    @warn "This function is deprecated. Use `SMD_settings`."
     r = div(D_ul, 2);
     p = D_ul - r;
     q = s = 0
@@ -56,6 +59,8 @@ function bilevel_settings(D_ul::Int, D_ll::Int, fnum::Int)
 end
 
 function bilevel_solutions(D_ul::Int, D_ll::Int, fnum::Int)
+    @warn "This function is deprecated. Use `SMD_solutions`."
+
     x = zeros(D_ul)
     y = zeros(D_ll)
 
@@ -68,6 +73,7 @@ function bilevel_solutions(D_ul::Int, D_ll::Int, fnum::Int)
 end
 
 function bilevel_ranges(D_ul::Int, D_ll::Int, fnum::Int)
+    @warn "This function is deprecated. Use `SMD_ranges`."
     bounds_ul = zeros(2D_ul)
     bounds_ll = zeros(2D_ll)
 
@@ -80,6 +86,7 @@ function bilevel_ranges(D_ul::Int, D_ll::Int, fnum::Int)
 end
 
 function bilevel_leader(x::Array{Float64}, y::Array{Float64}, fnum::Int)
+    @warn "This function is deprecated. Use `SMD_leader`."
 	D_ul = length(x)
 	D_ll = length(y)
     F = [0.0]
@@ -107,6 +114,7 @@ function bilevel_leader(x::Array{Float64}, y::Array{Float64}, fnum::Int)
 end
 
 function bilevel_follower(x::Array{Float64}, y::Array{Float64}, fnum::Int)
+    @warn "This function is deprecated. Use `SMD_follower`."
 	D_ul = length(x)
 	D_ll = length(y)
     f = [0.0]
@@ -128,110 +136,6 @@ function bilevel_follower(x::Array{Float64}, y::Array{Float64}, fnum::Int)
     end
 
     return f[1], -g
-end
-
-
-function SMD_leader(x::Array{Float64}, y::Array{Float64}, fnum::Int,p::Int,q::Int,r::Int,s::Int = 0)
-	F = [0.0]
-
-	if fnum == 1
-		ccall((:SMD1_leader, bilevelBenchmark),
-		  Cvoid,
-		(Int32, Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}),
-		  p, q, r, x, y, F)
-	elseif fnum == 2
-		ccall((:SMD2_leader, bilevelBenchmark),
-		  Cvoid,
-		(Int32, Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}),
-		  p, q, r, x, y, F)
-	elseif fnum == 3
-		ccall((:SMD3_leader, bilevelBenchmark),
-		  Cvoid,
-		(Int32, Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}),
-		  p, q, r, x, y, F)
-	elseif fnum == 4
-		ccall((:SMD4_leader, bilevelBenchmark),
-		  Cvoid,
-		(Int32, Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}),
-		  p, q, r, x, y, F)
-	elseif fnum == 5
-		ccall((:SMD5_leader, bilevelBenchmark),
-		  Cvoid,
-		(Int32, Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}),
-		  p, q, r, x, y, F)
-	elseif fnum == 6
-		ccall((:SMD6_leader, bilevelBenchmark),
-		  Cvoid,
-		(Int32, Int32, Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}),
-		  p, q, r, s, x, y, F)
-	elseif fnum == 7
-		ccall((:SMD7_leader, bilevelBenchmark),
-		  Cvoid,
-		(Int32, Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}),
-		  p, q, r, x, y, F)
-	elseif fnum == 8
-		ccall((:SMD8_leader, bilevelBenchmark),
-		  Cvoid,
-		(Int32, Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}),
-		  p, q, r, x, y, F)
-	else
-		error("Not a valid number")
-	end
-	
-	return F[1]
-end
-
-
-function SMD_follower(x::Array{Float64},y::Array{Float64},fnum::Int,p::Int,q::Int,r::Int,s::Int = 0)
-	D_ul = length(x)
-	D_ll = length(y)
-	F = [0.0]
-
-	if fnum == 1
-		ccall((:SMD1_follower, bilevelBenchmark),
-		  Cvoid,
-		(Int32, Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}),
-		  p, q, r, x, y, F)
-	elseif fnum == 2
-		ccall((:SMD2_follower, bilevelBenchmark),
-		  Cvoid,
-		(Int32, Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}),
-		  p, q, r, x, y, F)
-	elseif fnum == 3
-		ccall((:SMD3_follower, bilevelBenchmark),
-		  Cvoid,
-		(Int32, Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}),
-		  p, q, r, x, y, F)
-	elseif fnum == 4
-		ccall((:SMD4_follower, bilevelBenchmark),
-		  Cvoid,
-		(Int32, Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}),
-		  p, q, r, x, y, F)
-	elseif fnum == 5
-		ccall((:SMD5_follower, bilevelBenchmark),
-		  Cvoid,
-		(Int32, Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}),
-		  p, q, r, x, y, F)
-	elseif fnum == 6
-		ccall((:SMD6_follower, bilevelBenchmark),
-		  Cvoid,
-		(Int32, Int32, Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}),
-		  p, q, r, s, x, y, F)
-	elseif fnum == 7
-		ccall((:SMD7_follower, bilevelBenchmark),
-		  Cvoid,
-		(Int32, Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}),
-		  p, q, r, x, y, F)
-	elseif fnum == 8
-		ccall((:SMD8_follower, bilevelBenchmark),
-		  Cvoid,
-		(Int32, Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}),
-		  p, q, r, x, y, F)
-	else
-		error("Not a valid number")
-	end
-	
-	return F[1]
 end
 
 
