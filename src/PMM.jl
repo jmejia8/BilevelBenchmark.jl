@@ -1,44 +1,46 @@
-function PMM_settings(fnum::Int)
+function PMM_settings(D_ul::Int, D_ll::Int, fnum::Int)
 
-    settings = zeros(Int32, 2)
+    settings = zeros(Int32, 5)
     ccall((:PMM_config, bilevelBenchmark),
           Cvoid,
-        (Ptr{Int32}, Int32),
-        settings, fnum)
+        (Int32,Int32,Ptr{Int32}, Int32),
+        D_ul, D_ll,settings, fnum)
 
-    lenG, leng = settings
+    _, _,m,lenG, leng = settings
 
-    return lenG, leng
+    return m,lenG, leng
 end
 
 
-function PMM_Ψ(x::Array{Float64}, m::Int, fnum::Int)
+function PMM_Ψ(x::Array{Float64}, D_ll::Int, fnum::Int)
 
-    lenG, leng = PMM_settings(fnum)
+    D_ul = length(x)
+    
+    m,lenG, leng = PMM_settings(D_ul,D_ll,fnum)
 
-    n = length(x)
-    y = zeros(n)
+    y = zeros(D_ll)
     
     ccall((:PMM_Psi, bilevelBenchmark),
           Cvoid,
-        (Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Int32),
-        m,   n,       x,           y,        fnum)
+        (Int32, Int32,Int32, Ptr{Cdouble}, Ptr{Cdouble}, Int32),
+        D_ul, D_ll, m,       x,           y,        fnum)
 
     return y
 end
 
 function PMM_leader(x::Array{Float64}, y::Array{Float64}, fnum::Int)
-    lenG, leng = PMM_settings(fnum)
     F = [0.0]
-    G = zeros(lenG)
 
-    n = length(x)
-    m = div(n, 2)
+    D_ul = length(x)
+    D_ll = length(y)
+
+    m,lenG, leng = PMM_settings(D_ul,D_ll,fnum)
+    G = zeros(lenG)
 
     ccall((:PMM_leader, bilevelBenchmark),
           Cvoid,
-        (Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Int32),
-        m, n, x, y, F, G, fnum)
+        (Int32, Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Int32),
+        D_ul, D_ll, m, x, y, F, G, fnum)
 
     if lenG == 0
         return F[1]
@@ -49,17 +51,19 @@ function PMM_leader(x::Array{Float64}, y::Array{Float64}, fnum::Int)
 end
 
 function PMM_follower(x::Array{Float64}, y::Array{Float64}, fnum::Int)
-    lenG, leng = PMM_settings(fnum)
     f = [0.0]
-    g = zeros(leng)
 
-    n = length(x)
-    m = div(n, 2)
+
+    D_ul = length(x)
+    D_ll = length(y)
+
+    m,lenG, leng = PMM_settings(D_ul,D_ll,fnum)
+    g = zeros(leng)
 
     ccall((:PMM_follower, bilevelBenchmark),
           Cvoid,
-        (Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Int32),
-        m, n, x, y, f, g, fnum)
+        (Int32, Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Int32),
+        D_ul, D_ll, m, x, y, f, g, fnum)
 
     if leng == 0
         return f[1]
@@ -68,9 +72,9 @@ function PMM_follower(x::Array{Float64}, y::Array{Float64}, fnum::Int)
     return f[1], -g
 end
 
-function PMM_test(m, n, fnum)
-    x = rand(10)
-    y = PMM_Ψ(x, 5, fnum)#rand(10)
+function PMM_test(D_ul, D_ll, fnum)
+    x = -10 .+ 20*rand(D_ul)
+    y = PMM_Ψ(x, D_ll, fnum)#rand(10)
     if fnum < 6
         F = PMM_leader(x, y, fnum)
         f = PMM_follower(x, y, fnum)
@@ -81,8 +85,8 @@ function PMM_test(m, n, fnum)
 
     if !(f ≈ 0)
         @error("Check bilevel-benchmark repository: (x, y) is infeasible")
-        return -1
+        return -1, -1
     end
 
-    return abs(F) + abs(f)
+    return F, f
 end
