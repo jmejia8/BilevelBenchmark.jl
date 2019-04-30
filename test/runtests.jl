@@ -42,7 +42,7 @@ end
 @testset "PMM" begin
     for i = 1:10
         F, f = BilevelBenchmark.PMM_test(10, 10, i)
-        @test f ≈ 0.0 && F >= 0.0
+        @test abs(f) <= 1e-16 && F >= 0.0
     end
 
     x = y = zeros(9)
@@ -55,7 +55,7 @@ end
             f, _ = PMM_follower(x, y, fnum)
         end
 
-        @test abs(F) ≈ 0.0 &&  abs(f) ≈ 0.0
+        @test abs(F) <= 1e-16 &&  abs(f) <= 1e-16
     end
 end
 

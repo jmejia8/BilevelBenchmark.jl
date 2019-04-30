@@ -46,7 +46,7 @@ function PMM_leader(x::Array{Float64}, y::Array{Float64}, fnum::Int)
         return F[1]
     end
 
-    return F[1], -G
+    return F[1], G
     
 end
 
@@ -69,7 +69,7 @@ function PMM_follower(x::Array{Float64}, y::Array{Float64}, fnum::Int)
         return f[1]
     end
 
-    return f[1], -g
+    return f[1], g
 end
 
 function PMM_test(D_ul, D_ll, fnum)
@@ -81,11 +81,6 @@ function PMM_test(D_ul, D_ll, fnum)
     else
         F, _ = PMM_leader(x, y, fnum)
         f, _ = PMM_follower(x, y, fnum)
-    end
-
-    if !(f ≈ 0)
-        @error("Check bilevel-benchmark repository: (x, y) is infeasible")
-        return -1, -1
     end
 
     return F, f
