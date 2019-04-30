@@ -39,8 +39,8 @@ function PMM_leader(x::Array{Float64}, y::Array{Float64}, fnum::Int)
 
     ccall((:PMM_leader, bilevelBenchmark),
           Cvoid,
-        (Int32, Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Int32),
-        D_ul, D_ll, m, x, y, F, G, fnum)
+        (Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Int32),
+        D_ul, D_ll, x, y, F, G, fnum)
 
     if lenG == 0
         return F[1]
@@ -62,8 +62,8 @@ function PMM_follower(x::Array{Float64}, y::Array{Float64}, fnum::Int)
 
     ccall((:PMM_follower, bilevelBenchmark),
           Cvoid,
-        (Int32, Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Int32),
-        D_ul, D_ll, m, x, y, f, g, fnum)
+        (Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Int32),
+        D_ul, D_ll, x, y, f, g, fnum)
 
     if leng == 0
         return f[1]
