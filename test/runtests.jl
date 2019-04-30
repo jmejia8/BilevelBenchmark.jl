@@ -41,7 +41,21 @@ end
 
 @testset "PMM" begin
     for i = 1:10
-        @test BilevelBenchmark.PMM_test(5, 10, i) >= 0
+        F, f = BilevelBenchmark.PMM_test(10, 10, i)
+        @test f ≈ 0.0 && F >= 0.0
+    end
+
+    x = y = zeros(9)
+    for fnum = 1:10
+        if fnum < 6
+            F = PMM_leader(x, y, fnum)
+            f = PMM_follower(x, y, fnum)
+        else
+            F, _ = PMM_leader(x, y, fnum)
+            f, _ = PMM_follower(x, y, fnum)
+        end
+
+        @test abs(F) ≈ 0.0 &&  abs(f) ≈ 0.0
     end
 end
 
