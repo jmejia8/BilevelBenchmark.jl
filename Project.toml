@@ -1,7 +1,7 @@
 name = "BilevelBenchmark"
 uuid = "3e6cfef4-517a-11e9-1c58-1b26af384028"
 authors = ["Jesus Mejia <jesusmejded@gmail.com>"]
-version = "0.1.7"
+version = "0.1.8"
 
 [deps]
 Libdl = "8f399da3-3557-5675-b5ff-fb832c97cbdb"
