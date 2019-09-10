@@ -36,6 +36,9 @@ end
 @testset "TP" begin
     for i = 1:10
         @test TP_test(i) >= 0
+
+        # bounds_ul, bounds_ll = TP_ranges(i)
+        
     end
 end
 
