@@ -29,6 +29,9 @@ function PMM_Ψ(x::Array{Float64}, D_ll::Int, fnum::Int)
 end
 
 function PMM_leader(x::Array{Float64}, y::Array{Float64}, fnum::Int)
+    if fnum > 6
+        @error "PMM1 to PMM6 are alowed."
+    end
     F = [0.0]
 
     D_ul = length(x)
@@ -51,6 +54,9 @@ function PMM_leader(x::Array{Float64}, y::Array{Float64}, fnum::Int)
 end
 
 function PMM_follower(x::Array{Float64}, y::Array{Float64}, fnum::Int)
+    if fnum > 6
+        @error "PMM1 to PMM6 are alowed."
+    end
     f = [0.0]
 
 
@@ -75,7 +81,7 @@ end
 function PMM_test(D_ul, D_ll, fnum)
     x = -10 .+ 20*rand(D_ul)
     y = PMM_Ψ(x, D_ll, fnum)#rand(10)
-    if fnum < 6
+    if fnum <= 6
         F = PMM_leader(x, y, fnum)
         f = PMM_follower(x, y, fnum)
     else
