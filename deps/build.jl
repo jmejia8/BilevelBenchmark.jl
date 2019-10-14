@@ -12,7 +12,7 @@ using Compat.Libdl
 
 @BinDeps.setup
 
-version = "9.1.2"
+version = "9.1.3"
 bilevelBenchmark = library_dependency("bilevelBenchmarkJulia", aliases=["blb18_op_v$version"], os = :Unix)
 
 # build from source
