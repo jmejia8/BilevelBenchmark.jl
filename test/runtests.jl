@@ -43,14 +43,15 @@ end
 end
 
 @testset "PMM" begin
-    for i = 1:10
+    for i = 1:6
         F, f = BilevelBenchmark.PMM_test(10, 10, i)
-        @test abs(f) <= 1e-16 && F >= 0.0
+        @test abs(f + F) <= 1e-16 
     end
 
-    x = y = zeros(9)
-    for fnum = 1:10
-        if fnum < 6
+    x = zeros(9)
+    for fnum = 1:6
+        y = PMM_Ψ(x, 9, fnum)
+        if fnum < 7
             F = PMM_leader(x, y, fnum)
             f = PMM_follower(x, y, fnum)
         else
