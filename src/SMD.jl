@@ -186,3 +186,34 @@ function SMD_follower(x::Array{Float64},y::Array{Float64},fnum::Int,p::Int,q::In
     
     return F[1]
 end
+
+function SMD_Ψ(x, D_ll, fnum)
+    D_ul = length(x)
+    y = zeros(D_ll)
+
+    p, q, r, s, lenG,leng = SMD_settings(D_ul, D_ll, fnum)
+    # @show p, q, r, s
+
+    if fnum == 1
+        y[q+1:end] = atan.(x[p+1:end])
+    elseif fnum == 2
+        y[q+1:end] = exp.(x[p+1:end])
+    elseif fnum == 3
+        y[q+1:end] = atan.(x[p+1:end].^2)
+    elseif fnum == 4
+        y[q+1:end] = exp.(abs.(x[p+1:end])) .- 1.0
+    elseif fnum == 5
+        y[1:q] .= 1.0
+        y[q+1:end] = sqrt.(abs.(x[p+1:end]))
+    elseif fnum == 6
+        # q = 1; s = 2;
+        y[q+s+1:end] = x[p+1:end]
+    elseif fnum == 7
+        y[q+1:end] = exp.(x[p+1:end])
+    elseif fnum == 8
+        y[q+1:end] = (x[p+1:end]).^(1/3)
+    end
+
+    y
+end
+
