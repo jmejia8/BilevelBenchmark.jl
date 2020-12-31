@@ -20,6 +20,9 @@ Or, equivalently, via the `Pkg` API:
 julia> import Pkg; Pkg.add("https://github.com/jmejia8/BilevelBenchmark.jl.git")
 ```
 
+If you are using Windows 10 (or later), then you should to run `import Pkg; Pkg.build("BilevelBenchmark") `
+after installation.
+
 ## Example
 
 
