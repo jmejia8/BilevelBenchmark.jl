@@ -1,10 +1,6 @@
 module BilevelBenchmark
 
-if VERSION >= v"0.7.0"
-    using Pkg
-    "BinDeps" ∉ keys(Pkg.installed()) && Pkg.add("BinDeps")
-
-elseif VERSION < v"0.7.0"
+if VERSION < v"0.7.0"
     Pkg.installed("BinDeps") == nothing && Pkg.add("BinDeps")
     Cvoid = Void
 end
@@ -20,6 +16,7 @@ export bilevel_settings, bilevel_ranges
 export TP_settings,TP_leader,TP_follower,TP_test
 export SMD_settings, SMD_solutions, SMD_ranges, SMD_leader, SMD_follower
 export PMM_settings, PMM_Ψ, PMM_leader, PMM_follower, PMM_test, TP_ranges
+export SMD_Ψ
 
 include("TP.jl")
 include("SMD.jl")
