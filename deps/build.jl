@@ -9,7 +9,7 @@ using Compat.Libdl
 
 version = "9.1.6"
 bilevelBenchmark = library_dependency("bilevelBenchmarkJulia",
-                                      aliases=["blb18_op_v$version", "blb18_op"],
+                                      aliases=["blb18_op_v$version", "blb18_op.exe"],
                                       os = BinDeps.OSNAME)
 
 # build from source
