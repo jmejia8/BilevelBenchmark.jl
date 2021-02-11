@@ -78,6 +78,12 @@ function PMM_follower(x::Array{Float64}, y::Array{Float64}, fnum::Int)
     return f[1], g
 end
 
+function PMM_ranges(D_ul, D_ll, fnum=0)
+    bounds_ul = Array([-10ones(D_ul) 10ones(D_ul)]')
+    bounds_ll = Array([-10ones(D_ll) 10ones(D_ll)]')
+    bounds_ul, bounds_ll
+end
+
 function PMM_test(D_ul, D_ll, fnum)
     x = -10 .+ 20*rand(D_ul)
     y = PMM_Ψ(x, D_ll, fnum)#rand(10)
