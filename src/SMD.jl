@@ -211,7 +211,8 @@ function SMD_Ψ(x, D_ll, fnum)
     elseif fnum == 7
         y[q+1:end] = exp.(x[p+1:end])
     elseif fnum == 8
-        y[q+1:end] = (x[p+1:end]).^(1/3)
+        xx = x[p+1:end]
+        y[q+1:end] = sign.(xx) .* abs.(xx) .^(1/3)
     end
 
     y
