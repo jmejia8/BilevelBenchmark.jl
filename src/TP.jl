@@ -26,6 +26,18 @@ function TP_solutions(fnum::Int)
     return x, y
 end
 
+function TP_optimum(fnum::Int)
+
+    F = [0.0] 
+    f = [0.0] 
+    ccall((:TP_optimum, bilevelBenchmark),
+        Cvoid,
+        (Ptr{Cdouble}, Ptr{Cdouble}, Int32),
+        F, f, fnum)
+
+    return F[1], f[1]
+end
+
 function TP_leader(x::Array{Float64}, y::Array{Float64}, fnum::Int)
     D_ul, D_ll, lenG, _ = TP_settings(fnum)
     F = [0.0]
@@ -36,7 +48,7 @@ function TP_leader(x::Array{Float64}, y::Array{Float64}, fnum::Int)
         (Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Int32),
         D_ul, D_ll, x, y, F, G, fnum)
 
-    return F[1], -G
+    return F[1], G
     
 end
 
@@ -50,7 +62,7 @@ function TP_follower(x::Array{Float64}, y::Array{Float64}, fnum::Int)
         (Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Int32),
         D_ul, D_ll, x, y, f, g, fnum)
 
-    return f[1], -g
+    return f[1], g
 end
 
 function TP_ranges(fnum)
@@ -76,7 +88,10 @@ function TP_test(fnum)
 
     bounds_ul = TP_ranges(fnum)
     bounds_ll = TP_ranges(fnum)
-
+    Fx, fx = TP_optimum(fnum)
+    x, y = TP_solutions(fnum)
+    FFx = TP_leader(x,y, fnum)[1]
+    ffx = TP_follower(x,y, fnum)[1]
 
     x = rand(D_ul)
     y = rand(D_ll)

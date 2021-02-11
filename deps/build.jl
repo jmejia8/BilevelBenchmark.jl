@@ -7,7 +7,7 @@ using Compat.Libdl
 
 @BinDeps.setup
 
-version = "9.1.6"
+version = "9.1.7"
 bilevelBenchmark = library_dependency("bilevelBenchmarkJulia",
                                       aliases=["blb18_op_v$version", "blb18_op.exe"],
                                       os = BinDeps.OSNAME)
@@ -36,7 +36,7 @@ provides(SimpleBuild,
 
 
 provides(Binaries,
-    URI("https://bi-level.org/wp-content/uploads/2020/12/blb_op.zip"),
+    URI("https://github.com/jmejia8/bilevel-benchmark/files/5967963/blb_op.zip"),
     bilevelBenchmark,
     os = :Windows)
 

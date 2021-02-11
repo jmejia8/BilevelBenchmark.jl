@@ -13,127 +13,45 @@ end
 
 export bilevel_leader, bilevel_follower, bilevel_solutions
 export bilevel_settings, bilevel_ranges
-export TP_settings,TP_leader,TP_follower,TP_test
-export SMD_settings, SMD_solutions, SMD_ranges, SMD_leader, SMD_follower
-export PMM_settings, PMM_Ψ, PMM_leader, PMM_follower, PMM_test, PMM_ranges, TP_ranges
+export TP_settings,TP_leader,TP_follower,TP_test, TP_optimum
+export SMD_settings, SMD_solutions, SMD_ranges, SMD_leader, SMD_follower, SMD_optimum
+export PMM_settings, PMM_Ψ, PMM_leader, PMM_follower, PMM_test, PMM_ranges, TP_ranges, PMM_optimum
 export SMD_Ψ
+export get_problem
 
 include("TP.jl")
 include("SMD.jl")
 include("PMM.jl")
+include("deprecated.jl")
 
-function bilevel_settings(D_ul::Int, D_ll::Int, fnum::Int)
-    @warn "This function is deprecated. Use `SMD_settings`."
-    r = div(D_ul, 2);
-    p = D_ul - r;
-    q = s = 0
-    
-    if fnum == 6
-        q = floor(Int, (D_ll - r) / 2);
-        s =  ceil(Int, (D_ll - r) / 2);
+function get_problem(benchmark, fnum; D_ul = 2, D_ll = 3)
+    if benchmark == :SMD
+        F = (x,y) -> SMD_leader(x,y,fnum)
+        f = (x,y) -> SMD_follower(x,y,fnum)
+        Ψ = x -> SMD_Ψ(x, D_ll, fnum)
+        bounds_ul, bounds_ll = SMD_ranges(D_ul, D_ll, fnum)
+        z = SMD_optimum(fnum)
+    elseif benchmark == :PMM
+        F = (x,y) -> PMM_leader(x,y,fnum)
+        f = (x,y) -> PMM_follower(x,y,fnum)
+        Ψ = x -> PMM_Ψ(x, D_ll, fnum)
+        bounds_ul, bounds_ll = PMM_ranges(D_ul, D_ll, fnum)
+        z = PMM_optimum(fnum)
+    elseif benchmark == :TP
+        @warn "TP not implement the Ψ mapping"
+        F = (x,y) -> TP_leader(x,y,fnum)
+        f = (x,y) -> TP_follower(x,y,fnum)
+        Ψ = x -> zeros(D_ll)
+        bounds_ul, bounds_ll = TP_ranges(fnum)
+        z = TP_optimum(fnum)
     else
-        q = D_ll - r;
+        error("Only :SMD, :PMM and :TP are defined.")
+        return
     end
 
-    if fnum == 9
-        lenG = 1
-        leng = 1
-    elseif fnum == 10
-        lenG = p+r
-        leng = q
-    elseif fnum == 11
-        lenG = r
-        leng = 1
-    elseif fnum == 12
-        lenG = 2*r + p
-        leng = q+1
-    else
-        lenG = 0
-        leng = 0
-    end
-
-    return lenG, leng
+    return F, f, bounds_ul, bounds_ll, Ψ, z 
 end
 
-function bilevel_solutions(D_ul::Int, D_ll::Int, fnum::Int)
-    @warn "This function is deprecated. Use `SMD_solutions`."
-
-    x = zeros(D_ul)
-    y = zeros(D_ll)
-
-    ccall((:blb18_cop_solutions, bilevelBenchmark),
-              Cvoid,
-            (Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Int32),
-            D_ul, D_ll, x, y, fnum)
-    
-    return x, y
-end
-
-function bilevel_ranges(D_ul::Int, D_ll::Int, fnum::Int)
-    @warn "This function is deprecated. Use `SMD_ranges`."
-    bounds_ul = zeros(2D_ul)
-    bounds_ll = zeros(2D_ll)
-
-    ccall((:blb18_cop_ranges, bilevelBenchmark),
-              Cvoid,
-            (Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Int32),
-            D_ul, D_ll, bounds_ul, bounds_ll, fnum)
-    
-    return Array(reshape(bounds_ul, D_ul, :)'), Array(reshape(bounds_ll, D_ll, :)')
-end
-
-function bilevel_leader(x::Array{Float64}, y::Array{Float64}, fnum::Int)
-    @warn "This function is deprecated. Use `SMD_leader`."
-	D_ul = length(x)
-	D_ll = length(y)
-    F = [0.0]
-	G = [0.0]
-    lenG = 0
-
-    if fnum > 8
-        lenG, _ = bilevel_settings(D_ul, D_ll, fnum)
-        G = zeros(lenG)
-    end
-
-    ccall((:blb18_leader_cop, bilevelBenchmark),
-          Cvoid,
-        (Int32, Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Int32),
-        1, D_ul, D_ll, x, y, F, G, fnum)
-
-    if lenG == 0
-    	return F[1]
-    end
-
-    return F[1], -G
-
-
-    
-end
-
-function bilevel_follower(x::Array{Float64}, y::Array{Float64}, fnum::Int)
-    @warn "This function is deprecated. Use `SMD_follower`."
-	D_ul = length(x)
-	D_ll = length(y)
-    f = [0.0]
-	g = [0.0]
-    leng = 0
-
-    if fnum > 8
-        _, leng = bilevel_settings(D_ul, D_ll, fnum)
-        g = zeros(leng)
-    end
-
-	ccall((:blb18_follower_cop, bilevelBenchmark),
-		  Cvoid,
-		(Int32, Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Int32),
-		1, D_ul, D_ll, x, y, f, g, fnum)
-	
-    if leng == 0
-        return f[1]
-    end
-
-    return f[1], -g
-end
 
 
 end # module

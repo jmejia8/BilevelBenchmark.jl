@@ -57,7 +57,7 @@ function SMD_leader(x::Array{Float64}, y::Array{Float64}, fnum::Int)
       return F[1]
     end
 
-    return F[1], -G
+    return F[1], G
 end
 
 function SMD_follower(x::Array{Float64}, y::Array{Float64}, fnum::Int)
@@ -81,7 +81,7 @@ function SMD_follower(x::Array{Float64}, y::Array{Float64}, fnum::Int)
         return f[1]
     end
 
-    return f[1], -g
+    return f[1], g
 end
 
 function SMD_leader(x::Array{Float64}, y::Array{Float64}, fnum::Int,p::Int,q::Int,r::Int,s::Int = 0)
@@ -216,5 +216,21 @@ function SMD_Ψ(x, D_ll, fnum)
     end
 
     y
+end
+
+
+function SMD_optimum(fnum)
+    if 1 <= fnum <= 9
+        return 0.0, 0.0
+    elseif fnum == 10
+        return 4.0, 3.0
+    elseif fnum == 11
+        return -1.0, 1.0
+    elseif fnum == 12
+        return 3.0, 4.0
+    else
+        error("SMD_optimum(fnum) with fnum = 1,2,...,12")
+    end
+
 end
 
