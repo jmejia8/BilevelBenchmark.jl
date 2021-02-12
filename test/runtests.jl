@@ -85,3 +85,19 @@ end
         @test abs(f + sum(g)) >= 0
     end
 end
+
+
+@testset "bilevel get problem" begin
+    for benchmark in [:SMD, :PMM, :TP]
+        for fnum = 1:6
+            F, f, bounds_ul, bounds_ll, Ψ, z = get_problem(benchmark, fnum)
+            x = bounds_ul[1,:]
+            y = bounds_ll[1,:]
+            Fxy = F(x, y)
+            fxy = f(x,y)
+            @test abs(z[1]) + abs(z[2]) >= 0 
+        end
+    end
+    
+end
+

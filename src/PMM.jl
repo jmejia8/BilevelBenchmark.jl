@@ -97,3 +97,8 @@ function PMM_test(D_ul, D_ll, fnum)
 
     return F, f
 end
+
+function PMM_optimum(fnum)
+    return 0.0, 0.0
+
+end
