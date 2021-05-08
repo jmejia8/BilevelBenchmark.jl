@@ -48,7 +48,7 @@ function TP_leader(x::Array{Float64}, y::Array{Float64}, fnum::Int)
         (Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Int32),
         D_ul, D_ll, x, y, F, G, fnum)
 
-    return F[1], G
+    return F[1], G, [0.0]
     
 end
 
@@ -62,7 +62,7 @@ function TP_follower(x::Array{Float64}, y::Array{Float64}, fnum::Int)
         (Int32, Int32, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Ptr{Cdouble}, Int32),
         D_ul, D_ll, x, y, f, g, fnum)
 
-    return f[1], g
+    return f[1], g, [0.0]
 end
 
 function TP_ranges(fnum)
